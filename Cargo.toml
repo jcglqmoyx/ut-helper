@@ -1,0 +1,12 @@
+[package]
+name = "ut-helper"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix-web = "4.8.0"
+tokio = { version = "1.38.0", features = ["full"] }
+device_query = "2.1.0"
+enigo = "0.2.1"

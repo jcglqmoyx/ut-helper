@@ -32,7 +32,7 @@ async fn get(data: web::Data<Arc<AppState>>) -> impl Responder {
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
     let data = Arc::new(AppState {
-        mode: Mutex::new(0),
+        mode: Mutex::new(1),
     });
 
     let data_clone = data.clone();

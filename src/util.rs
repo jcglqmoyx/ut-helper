@@ -34,7 +34,7 @@ pub fn key_press(kit: &mut i32) {
     for key in &keys {
         if !commands.contains_key(key) {
             if *key == Keycode::Key2 {
-                let _ = enigo.text("i");
+                let _ = enigo.text("t");
                 thread::sleep(time::Duration::from_millis(50));
                 if (*kit & 1) == 0 {
                     let _ = enigo.text("!kit arm");
@@ -46,14 +46,14 @@ pub fn key_press(kit: &mut i32) {
                 let _ = enigo.key(Key::Return, Click);
                 thread::sleep(time::Duration::from_millis(50));
             } else if *key == Keycode::Key3 {
-                let _ = enigo.text("i");
+                let _ = enigo.text("t");
                 thread::sleep(time::Duration::from_millis(50));
                 let _ = enigo.text("!heal");
                 thread::sleep(time::Duration::from_millis(50));
                 let _ = enigo.key(Key::Return, Click);
             }
         } else {
-            let _ = enigo.text("i");
+            let _ = enigo.text("t");
             thread::sleep(time::Duration::from_millis(50));
             let _ = enigo.text(commands.get(key).unwrap());
             thread::sleep(time::Duration::from_millis(50));
@@ -64,7 +64,7 @@ pub fn key_press(kit: &mut i32) {
 }
 pub fn gamble(stake: i32) {
     let mut enigo = Enigo::new(&Settings::default()).unwrap();
-    let _ = enigo.text("i");
+    let _ = enigo.text("t");
     thread::sleep(time::Duration::from_millis(200));
     let text = format!("!gamble {}", stake);
     let _ = enigo.text(&text);

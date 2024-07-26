@@ -74,7 +74,7 @@ async fn main() -> std::io::Result<()> {
         }
     });
     tokio::spawn(async move {
-        fn other_users_connected(s: String) -> bool {
+        fn other_users_connected(s: &str) -> bool {
             if s.contains("connections") && s.contains("connected from") {
                 if !(s.contains("^7[User]^2[Authed]^6 ^3UrT^7^4") || s.contains("Juliet") || s.contains("Fried") || s.contains("Camel")) {
                     return true;
@@ -100,7 +100,8 @@ async fn main() -> std::io::Result<()> {
                 tokio::spawn(async move {
                     let mut reader = BufReader::new(stdout).lines();
                     while let Some(line) = reader.next_line().await.unwrap_or(None) {
-                        if other_users_connected(line) {
+                        if other_users_connected(&line) {
+                            println!("{}\nExiting..", line);
                             process::exit(0);
                         }
                     }
@@ -111,7 +112,8 @@ async fn main() -> std::io::Result<()> {
                 tokio::spawn(async move {
                     let mut reader = BufReader::new(stderr).lines();
                     while let Some(line) = reader.next_line().await.unwrap_or(None) {
-                        if other_users_connected(line) {
+                        if other_users_connected(&line) {
+                            println!("{}\nExiting..", line);
                             process::exit(0);
                         }
                     }

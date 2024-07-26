@@ -1,7 +1,11 @@
+use std::{process, time};
+use std::process::Stdio;
 use std::sync::{Arc, Mutex};
-use std::time;
 
 use actix_web::{App, HttpServer, Responder, web};
+use anyhow::{Context, Result};
+use tokio::io::{AsyncBufReadExt, BufReader};
+use tokio::process::Command;
 use tokio::signal::ctrl_c;
 
 mod util;
@@ -69,8 +73,58 @@ async fn main() -> std::io::Result<()> {
             tokio::time::sleep(time::Duration::from_millis(50)).await;
         }
     });
+    tokio::spawn(async move {
+        fn other_users_connected(s: String) -> bool {
+            if s.contains("connections") && s.contains("connected from") {
+                if !(s.contains("^7[User]^2[Authed]^6 ^3UrT^7^4") || s.contains("Juliet") || s.contains("Fried") || s.contains("Camel")) {
+                    return true;
+                }
+            }
+            false
+        }
+        async fn run_application() -> Result<()> {
+            let command = "stdbuf";
+            let args = [
+                "-oL", "/home/hqc/Downloads/games/UrbanTerror43/Quake3-UrT.x86_64",
+                "+connect", "94.130.173.8:27961",
+            ];
 
-    ctrl_c().await.expect("Failed to listen for ctrl+c");
+            let mut process = Command::new(command)
+                .args(&args)
+                .stdout(Stdio::piped())
+                .stderr(Stdio::piped())
+                .spawn()
+                .context("Failed to spawn process.")?;
+
+            if let Some(stdout) = process.stdout.take() {
+                tokio::spawn(async move {
+                    let mut reader = BufReader::new(stdout).lines();
+                    while let Some(line) = reader.next_line().await.unwrap_or(None) {
+                        if other_users_connected(line) {
+                            process::exit(0);
+                        }
+                    }
+                });
+            }
+
+            if let Some(stderr) = process.stderr.take() {
+                tokio::spawn(async move {
+                    let mut reader = BufReader::new(stderr).lines();
+                    while let Some(line) = reader.next_line().await.unwrap_or(None) {
+                        if other_users_connected(line) {
+                            process::exit(0);
+                        }
+                    }
+                });
+            }
+
+            process.wait().await.context("Failed to await process completion.")?;
+
+            Ok(())
+        }
+        run_application().await.expect("Encountered an error. Exited.");
+    });
+    ctrl_c().await.expect("Failed to listen for ctrl+c.");
     server_handle.abort();
     Ok(())
 }

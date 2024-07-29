@@ -76,7 +76,7 @@ async fn main() -> std::io::Result<()> {
     tokio::spawn(async move {
         fn other_users_connected(s: &str) -> bool {
             if s.contains("connections") && s.contains("connected from") {
-                if !(s.contains("^7[User]^2[Authed]^6 ^3UrT^7^4") || s.contains("Juliet") || s.contains("Fried") || s.contains("Camel")) {
+                if !(s.contains("UrT") || s.contains("Juliet") || s.contains("Fried") || s.contains("Camel")) {
                     return true;
                 }
             }

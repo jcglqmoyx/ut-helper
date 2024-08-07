@@ -8,6 +8,8 @@ use tokio::io::{AsyncBufReadExt, BufReader};
 use tokio::process::Command;
 use tokio::signal::ctrl_c;
 
+use crate::util::quit_game;
+
 mod util;
 
 struct AppState {
@@ -102,6 +104,7 @@ async fn main() -> std::io::Result<()> {
                     while let Some(line) = reader.next_line().await.unwrap_or(None) {
                         if other_users_connected(&line) {
                             println!("{}\nExiting..", line);
+                            quit_game();
                             process::exit(0);
                         }
                     }
@@ -114,6 +117,7 @@ async fn main() -> std::io::Result<()> {
                     while let Some(line) = reader.next_line().await.unwrap_or(None) {
                         if other_users_connected(&line) {
                             println!("{}\nExiting..", line);
+                            quit_game();
                             process::exit(0);
                         }
                     }

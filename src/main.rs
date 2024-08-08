@@ -106,7 +106,7 @@ async fn main() -> std::io::Result<()> {
                         if other_users_connected(&line) {
                             println!("{}\nExiting..", line);
                             quit_game();
-                            tokio::time::sleep(Duration::from_secs(1)).await;
+                            tokio::time::sleep(Duration::from_secs(2)).await;
                             process::exit(0);
                         }
                     }
@@ -120,7 +120,7 @@ async fn main() -> std::io::Result<()> {
                         if other_users_connected(&line) {
                             println!("{}\nExiting..", line);
                             quit_game();
-                            tokio::time::sleep(Duration::from_secs(1)).await;
+                            tokio::time::sleep(Duration::from_secs(2)).await;
                             process::exit(0);
                         }
                     }

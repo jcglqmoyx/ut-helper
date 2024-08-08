@@ -1,6 +1,7 @@
 use std::{process, time};
 use std::process::Stdio;
 use std::sync::{Arc, Mutex};
+use std::time::Duration;
 
 use actix_web::{App, HttpServer, Responder, web};
 use anyhow::{Context, Result};
@@ -105,6 +106,7 @@ async fn main() -> std::io::Result<()> {
                         if other_users_connected(&line) {
                             println!("{}\nExiting..", line);
                             quit_game();
+                            tokio::time::sleep(Duration::from_secs(1)).await;
                             process::exit(0);
                         }
                     }
@@ -118,6 +120,7 @@ async fn main() -> std::io::Result<()> {
                         if other_users_connected(&line) {
                             println!("{}\nExiting..", line);
                             quit_game();
+                            tokio::time::sleep(Duration::from_secs(1)).await;
                             process::exit(0);
                         }
                     }

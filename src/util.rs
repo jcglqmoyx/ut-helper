@@ -14,10 +14,10 @@ pub fn now() -> u64 {
 
 pub fn quit_game() {
     simulate(&EventType::KeyPress(rdev::Key::BackQuote)).expect("");
-    thread::sleep(time::Duration::from_millis(100));
+    thread::sleep(time::Duration::from_millis(300));
     let mut enigo = Enigo::new(&Settings::default()).unwrap();
     let _ = enigo.text("\\quit");
-    thread::sleep(time::Duration::from_millis(100));
+    thread::sleep(time::Duration::from_millis(300));
     let _ = enigo.key(Key::Return, Click);
 }
 

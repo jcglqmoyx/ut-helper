@@ -44,10 +44,10 @@ pub fn key_press(kit: &mut i32) {
     commands.insert(Keycode::Key3, "!mo urt");
     commands.insert(Keycode::Key4, "!mo friedrich");
     commands.insert(Keycode::Key5, "!mo camel");
-    commands.insert(Keycode::Key6, "!pay juliet 1000000");
-    commands.insert(Keycode::Key7, "!pay urt 1000000");
-    commands.insert(Keycode::Key8, "!pay friedrich 1000000");
-    commands.insert(Keycode::Key9, "!pay camel 1000000");
+    commands.insert(Keycode::Key6, "!pay juliet 2500000");
+    commands.insert(Keycode::Key7, "!pay urt 2500000");
+    commands.insert(Keycode::Key8, "!pay friedrich 2500000");
+    commands.insert(Keycode::Key9, "!pay camel 2500000");
     let mut enigo = Enigo::new(&Settings::default()).unwrap();
     let device_state = DeviceState::new();
     let keys: Vec<Keycode> = device_state.get_keys();

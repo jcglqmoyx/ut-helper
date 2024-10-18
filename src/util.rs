@@ -38,8 +38,11 @@ pub fn key_press() {
                 let _ = enigo.text("t");
                 thread::sleep(time::Duration::from_millis(50));
                 let _ = enigo.text("!kit arm");
-                thread::sleep(time::Duration::from_millis(200));
+                thread::sleep(time::Duration::from_millis(50));
                 let _ = enigo.key(Key::Return, Click);
+                thread::sleep(time::Duration::from_millis(200));
+                let _ = enigo.text("t");
+                thread::sleep(time::Duration::from_millis(50));
                 let _ = enigo.text("!kit att");
                 thread::sleep(time::Duration::from_millis(50));
                 let _ = enigo.key(Key::Return, Click);

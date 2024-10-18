@@ -5,25 +5,14 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use device_query::{DeviceQuery, DeviceState, Keycode};
 use enigo::{Enigo, Key, Keyboard, Settings};
 use enigo::Direction::Click;
-use rdev::{EventType, simulate};
 
 pub fn now() -> u64 {
     let now = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
     now.as_secs() * 1000 + now.subsec_millis() as u64
 }
 
-pub fn quit_game() {
-    simulate(&EventType::KeyPress(rdev::Key::BackQuote)).expect("");
-    thread::sleep(time::Duration::from_millis(300));
-    let mut enigo = Enigo::new(&Settings::default()).unwrap();
-    let _ = enigo.text("\\quit");
-    thread::sleep(time::Duration::from_millis(300));
-    let _ = enigo.key(Key::Return, Click);
-}
-
-pub fn key_press(kit: &mut i32) {
+pub fn key_press() {
     let mut commands = HashMap::new();
-    /*
     commands.insert(Keycode::Key4, "!b m4a on");
     commands.insert(Keycode::Key5, "!b ump45 on");
     commands.insert(Keycode::Key6, "!b mp5k");
@@ -39,15 +28,6 @@ pub fn key_press(kit: &mut i32) {
     commands.insert(Keycode::End, "!gamble 1000000");
     commands.insert(Keycode::PageUp, "!gamble 1500000");
     commands.insert(Keycode::PageDown, "!gamble 2000000");
-     */
-    commands.insert(Keycode::Key2, "!mo juliet");
-    commands.insert(Keycode::Key3, "!mo urt");
-    commands.insert(Keycode::Key4, "!mo friedrich");
-    commands.insert(Keycode::Key5, "!mo camel");
-    commands.insert(Keycode::Key6, "!pay juliet 2500000");
-    commands.insert(Keycode::Key7, "!pay urt 2500000");
-    commands.insert(Keycode::Key8, "!pay friedrich 2500000");
-    commands.insert(Keycode::Key9, "!pay camel 2500000");
     let mut enigo = Enigo::new(&Settings::default()).unwrap();
     let device_state = DeviceState::new();
     let keys: Vec<Keycode> = device_state.get_keys();
@@ -57,12 +37,10 @@ pub fn key_press(kit: &mut i32) {
             if *key == Keycode::Key2 {
                 let _ = enigo.text("t");
                 thread::sleep(time::Duration::from_millis(50));
-                if (*kit & 1) == 0 {
-                    let _ = enigo.text("!kit arm");
-                } else {
-                    let _ = enigo.text("!kit att");
-                }
-                *kit += 1;
+                let _ = enigo.text("!kit arm");
+                thread::sleep(time::Duration::from_millis(50));
+                let _ = enigo.key(Key::Return, Click);
+                let _ = enigo.text("!kit att");
                 thread::sleep(time::Duration::from_millis(50));
                 let _ = enigo.key(Key::Return, Click);
                 thread::sleep(time::Duration::from_millis(50));

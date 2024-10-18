@@ -1,4 +1,4 @@
-use std::{process, time};
+use std::{time};
 use std::process::Stdio;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
@@ -8,8 +8,6 @@ use anyhow::{Context, Result};
 use tokio::io::{AsyncBufReadExt, BufReader};
 use tokio::process::Command;
 use tokio::signal::ctrl_c;
-
-use crate::util::quit_game;
 
 mod util;
 
@@ -58,13 +56,12 @@ async fn main() -> std::io::Result<()> {
 
     tokio::spawn(async move {
         let mut last_time_gamble: u64 = 0;
-        let mut kit = 0;
         loop {
             if *data_clone.mode.lock().unwrap() == 0 {
                 continue;
             }
             if *data_clone.mode.lock().unwrap() == 1 {
-                util::key_press(&mut kit);
+                util::key_press();
             } else if *data_clone.mode.lock().unwrap() >= 50000 {
                 let now = util::now();
                 if now - last_time_gamble < 125000 {
@@ -105,9 +102,9 @@ async fn main() -> std::io::Result<()> {
                     while let Some(line) = reader.next_line().await.unwrap_or(None) {
                         if other_users_connected(&line) {
                             println!("{}\nExiting..", line);
-                            quit_game();
+                         //   quit_game();
                             tokio::time::sleep(Duration::from_secs(2)).await;
-                            process::exit(0);
+                            //process::exit(0);
                         }
                     }
                 });
@@ -119,9 +116,9 @@ async fn main() -> std::io::Result<()> {
                     while let Some(line) = reader.next_line().await.unwrap_or(None) {
                         if other_users_connected(&line) {
                             println!("{}\nExiting..", line);
-                            quit_game();
+                        //    quit_game();
                             tokio::time::sleep(Duration::from_secs(2)).await;
-                            process::exit(0);
+                            //process::exit(0);
                         }
                     }
                 });

@@ -1,9 +1,8 @@
-use std::{time};
 use std::process::Stdio;
 use std::sync::{Arc, Mutex};
-use std::time::Duration;
+use std::time;
 
-use actix_web::{App, HttpServer, Responder, web};
+use actix_web::{web, App, HttpServer, Responder};
 use anyhow::{Context, Result};
 use tokio::io::{AsyncBufReadExt, BufReader};
 use tokio::process::Command;
@@ -55,33 +54,17 @@ async fn main() -> std::io::Result<()> {
     let server_handle = tokio::spawn(server);
 
     tokio::spawn(async move {
-        let mut last_time_gamble: u64 = 0;
         loop {
             if *data_clone.mode.lock().unwrap() == 0 {
                 continue;
             }
             if *data_clone.mode.lock().unwrap() == 1 {
                 util::key_press();
-            } else if *data_clone.mode.lock().unwrap() >= 50000 {
-                let now = util::now();
-                if now - last_time_gamble < 125000 {
-                    continue;
-                }
-                util::gamble(*data_clone.mode.lock().unwrap());
-                last_time_gamble = now;
             }
             tokio::time::sleep(time::Duration::from_millis(50)).await;
         }
     });
     tokio::spawn(async move {
-        fn other_users_connected(s: &str) -> bool {
-            if s.contains("connections") && s.contains("connected from") {
-                if !(s.contains("UrT") || s.contains("Juliet") || s.contains("Fried") || s.contains("Camel")) {
-                    return true;
-                }
-            }
-            false
-        }
         async fn run_application() -> Result<()> {
             let command = "stdbuf";
             let args = [
@@ -95,17 +78,11 @@ async fn main() -> std::io::Result<()> {
                 .stderr(Stdio::piped())
                 .spawn()
                 .context("Failed to spawn process.")?;
-
             if let Some(stdout) = process.stdout.take() {
                 tokio::spawn(async move {
                     let mut reader = BufReader::new(stdout).lines();
                     while let Some(line) = reader.next_line().await.unwrap_or(None) {
-                        if other_users_connected(&line) {
-                            println!("{}\nExiting..", line);
-                         //   quit_game();
-                            tokio::time::sleep(Duration::from_secs(2)).await;
-                            //process::exit(0);
-                        }
+                        println!("stdout: {}", line);
                     }
                 });
             }
@@ -114,16 +91,10 @@ async fn main() -> std::io::Result<()> {
                 tokio::spawn(async move {
                     let mut reader = BufReader::new(stderr).lines();
                     while let Some(line) = reader.next_line().await.unwrap_or(None) {
-                        if other_users_connected(&line) {
-                            println!("{}\nExiting..", line);
-                        //    quit_game();
-                            tokio::time::sleep(Duration::from_secs(2)).await;
-                            //process::exit(0);
-                        }
+                        println!("stderr: {}", line);
                     }
                 });
             }
-
             process.wait().await.context("Failed to await process completion.")?;
 
             Ok(())
